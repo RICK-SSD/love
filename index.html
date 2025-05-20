@@ -1,19 +1,146 @@
 <!DOCTYPE html>
 <html lang="ja">
 <head>
-  <meta charset="UTF-8">
-  <title>告白のページ</title>
-  <style>
-    body { font-family: sans-serif; text-align: center; margin-top: 100px; }
-    h1 { color: hotpink; }
-    p { font-size: 24px; }
-  </style>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>作者王宇吉</title>
+
+<!-- Google 手写字体 -->
+<link href="https://fonts.googleapis.com/css2?family=Kaushan+Script&display=swap" rel="stylesheet" />
+
+<style>
+  /* 背景渐变和全屏 */
+  body, html {
+    margin: 0; padding: 0; height: 100%;
+    overflow: hidden;
+    background: linear-gradient(135deg, #f8cdda 0%, #1d2b64 100%);
+    font-family: 'Kaushan Script', cursive;
+    color: #fff;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    text-align: center;
+    user-select: none;
+  }
+
+  /* 主体文字 */
+  #message {
+    font-size: 2.2em;
+    max-width: 90vw;
+    line-height: 1.6em;
+    text-shadow: 0 0 8px rgba(255 192 203 / 0.8);
+  }
+
+  /* 打字动画文字容器 */
+  .typing {
+    border-right: 3px solid #ff7f7f;
+    white-space: nowrap;
+    overflow: hidden;
+  }
+
+  /* 爱心旋转中心 */
+  #heart-center {
+    position: fixed;
+    bottom: 20vh;
+    font-size: 5rem;
+    color: #ff6b81;
+    animation: spin 8s linear infinite;
+    text-shadow:
+      0 0 5px #fff,
+      0 0 10px #ff6b81,
+      0 0 20px #ff3b5f,
+      0 0 40px #ff3b5f;
+  }
+
+  @keyframes spin {
+    from { transform: rotate(0deg);}
+    to { transform: rotate(360deg);}
+  }
+
+  /* 爱心粒子 */
+  .particle {
+    position: fixed;
+    color: #ff6b81;
+    font-size: 1.2em;
+    user-select: none;
+    pointer-events: none;
+    animation: floatUp linear forwards;
+    filter: drop-shadow(0 0 3px #ff3b5f);
+  }
+  @keyframes floatUp {
+    0% {
+      opacity: 1;
+      transform: translateY(0) scale(1);
+    }
+    100% {
+      opacity: 0;
+      transform: translateY(-150px) scale(1.5);
+    }
+  }
+</style>
 </head>
 <body>
-  <h1>💖 君の笑顔が、僕の毎日を明るくしてくれる 💖</h1>
-  <p>そんな君を、ずっと大切にしたい。</p>
-  <p>你的笑容照亮了我的每一天。</p>
-  <p>我想一直珍惜这样的你。</p>
-  <h2>💘 Love You Forever 💘</h2>
+
+<div id="heart-center">❤️</div>
+
+<div id="message" class="typing"></div>
+
+<audio id="bgm" autoplay loop>
+  <source src="https://cdn.jsdelivr.net/gh/jellyfin/jellyfin.github.io@main/media/music/tsubaki.mp3" type="audio/mpeg" />
+  你的浏览器不支持 audio 标签。
+</audio>
+
+<script>
+  // 打字文字内容（中日双语）
+  const textLines = [
+    "君の笑顔が、僕の毎日を明るくしてくれる。",
+    "そんな君を、ずっと大切にしたい。",
+    "",
+    "你的笑容照亮了我的每一天。",
+    "我想一直珍惜这样的你。"
+  ];
+
+  const messageEl = document.getElementById('message');
+  let lineIndex = 0;
+  let charIndex = 0;
+
+  function type() {
+    if (lineIndex >= textLines.length) return;
+    const currentLine = textLines[lineIndex];
+    if (charIndex <= currentLine.length) {
+      messageEl.textContent = currentLine.slice(0, charIndex) + "|";
+      charIndex++;
+      setTimeout(type, 120);
+    } else {
+      messageEl.textContent = currentLine;
+      charIndex = 0;
+      lineIndex++;
+      setTimeout(type, 600);
+    }
+  }
+  type();
+
+  // 爱心粒子生成
+  function createParticle() {
+    const particle = document.createElement('div');
+    particle.classList.add('particle');
+    particle.style.left = (Math.random() * window.innerWidth) + 'px';
+    particle.style.top = (window.innerHeight + 20) + 'px';
+    particle.textContent = '❤️';
+    document.body.appendChild(particle);
+
+    const duration = 4000 + Math.random() * 2000;
+    particle.style.animationDuration = duration + 'ms';
+
+    setTimeout(() => {
+      particle.remove();
+    }, duration);
+  }
+
+  // 每 300ms 生成一个爱心粒子
+  setInterval(createParticle, 300);
+</script>
+
 </body>
 </html>
