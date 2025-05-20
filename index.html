@@ -3,97 +3,103 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>作者王宇吉</title>
+<title>作者王宇吉 ❤️</title>
 
-<!-- Google 手写字体 -->
-<link href="https://fonts.googleapis.com/css2?family=Kaushan+Script&display=swap" rel="stylesheet" />
+<!-- Google 字体，换成柔和日系手写风 -->
+<link href="https://fonts.googleapis.com/css2?family=Sacramento&display=swap" rel="stylesheet" />
 
 <style>
-  /* 背景渐变和全屏 */
+  /* 动态背景渐变 */
+  @keyframes gradientBG {
+    0%{background-position:0% 50%}
+    50%{background-position:100% 50%}
+    100%{background-position:0% 50%}
+  }
+
   body, html {
-    margin: 0; padding: 0; height: 100%;
-    overflow: hidden;
-    background: linear-gradient(135deg, #f8cdda 0%, #1d2b64 100%);
-    font-family: 'Kaushan Script', cursive;
-    color: #fff;
+    margin:0; padding:0; height:100%;
+    background: linear-gradient(-45deg, #ffafbd, #ffc3a0, #2193b0, #6dd5ed);
+    background-size: 400% 400%;
+    animation: gradientBG 15s ease infinite;
+    font-family: 'Sacramento', cursive;
+    color: #ffe6e8;
     display: flex;
     justify-content: center;
     align-items: center;
     flex-direction: column;
     text-align: center;
     user-select: none;
-  }
-
-  /* 主体文字 */
-  #message {
-    font-size: 2.2em;
-    max-width: 90vw;
-    line-height: 1.6em;
-    text-shadow: 0 0 8px rgba(255 192 203 / 0.8);
-  }
-
-  /* 打字动画文字容器 */
-  .typing {
-    border-right: 3px solid #ff7f7f;
-    white-space: nowrap;
     overflow: hidden;
   }
 
-  /* 爱心旋转中心 */
-  #heart-center {
-    position: fixed;
-    bottom: 20vh;
-    font-size: 5rem;
-    color: #ff6b81;
-    animation: spin 8s linear infinite;
+  /* 文字发光阴影 + 渐变 */
+  #message {
+    font-size: 3em;
+    max-width: 90vw;
+    line-height: 1.5em;
+    margin: 0 20px;
+    background: linear-gradient(90deg, #ff758c, #ff7eb3);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
     text-shadow:
-      0 0 5px #fff,
-      0 0 10px #ff6b81,
-      0 0 20px #ff3b5f,
-      0 0 40px #ff3b5f;
+      0 0 5px #ff6f91,
+      0 0 10px #ff6f91,
+      0 0 20px #ff4a7a,
+      0 0 30px #ff4a7a;
+    opacity: 0;
+    animation: fadeInText 3s forwards;
   }
 
-  @keyframes spin {
-    from { transform: rotate(0deg);}
-    to { transform: rotate(360deg);}
+  @keyframes fadeInText {
+    to {opacity: 1;}
   }
 
-  /* 爱心粒子 */
+  /* 打字动画光标 */
+  .typing-cursor {
+    display: inline-block;
+    width: 2px;
+    height: 1.2em;
+    background-color: #ff758c;
+    margin-left: 4px;
+    animation: blink 1s infinite;
+    vertical-align: bottom;
+  }
+  @keyframes blink {
+    0%, 50% {opacity: 1;}
+    51%, 100% {opacity: 0;}
+  }
+
+  /* 粒子爱心样式 */
   .particle {
     position: fixed;
-    color: #ff6b81;
-    font-size: 1.2em;
+    color: #ff758c;
+    font-size: 1.4em;
     user-select: none;
     pointer-events: none;
-    animation: floatUp linear forwards;
-    filter: drop-shadow(0 0 3px #ff3b5f);
+    animation: floatUpEase 5s forwards;
+    filter: drop-shadow(0 0 6px #ff4a7a);
+    opacity: 0;
   }
-  @keyframes floatUp {
+
+  @keyframes floatUpEase {
     0% {
       opacity: 1;
-      transform: translateY(0) scale(1);
+      transform: translateY(0) scale(1) rotate(0deg);
     }
     100% {
       opacity: 0;
-      transform: translateY(-150px) scale(1.5);
+      transform: translateY(-200px) scale(1.3) rotate(360deg);
     }
   }
 </style>
 </head>
 <body>
 
-<div id="heart-center">❤️</div>
-
-<div id="message" class="typing"></div>
-
-<audio id="bgm" autoplay loop>
-  <source src="https://cdn.jsdelivr.net/gh/jellyfin/jellyfin.github.io@main/media/music/tsubaki.mp3" type="audio/mpeg" />
-  你的浏览器不支持 audio 标签。
-</audio>
+<div id="message"></div>
 
 <script>
-  // 打字文字内容（中日双语）
-  const textLines = [
+  // 打字文本（可改）
+  const lines = [
     "君の笑顔が、僕の毎日を明るくしてくれる。",
     "そんな君を、ずっと大切にしたい。",
     "",
@@ -101,45 +107,49 @@
     "我想一直珍惜这样的你。"
   ];
 
-  const messageEl = document.getElementById('message');
+  const msgEl = document.getElementById('message');
   let lineIndex = 0;
   let charIndex = 0;
+  let currentText = '';
 
-  function type() {
-    if (lineIndex >= textLines.length) return;
-    const currentLine = textLines[lineIndex];
-    if (charIndex <= currentLine.length) {
-      messageEl.textContent = currentLine.slice(0, charIndex) + "|";
+  function typeText() {
+    if (lineIndex >= lines.length) return;
+    const line = lines[lineIndex];
+
+    if (charIndex <= line.length) {
+      currentText = line.substring(0, charIndex);
+      msgEl.innerHTML = currentText + '<span class="typing-cursor"></span>';
       charIndex++;
-      setTimeout(type, 120);
+      setTimeout(typeText, 100);
     } else {
-      messageEl.textContent = currentLine;
+      msgEl.innerHTML = currentText; // 去掉光标
       charIndex = 0;
       lineIndex++;
-      setTimeout(type, 600);
+      setTimeout(typeText, 700);
     }
   }
-  type();
+  typeText();
 
-  // 爱心粒子生成
+  // 生成爱心粒子，带随机位置和缓动效果
   function createParticle() {
-    const particle = document.createElement('div');
-    particle.classList.add('particle');
-    particle.style.left = (Math.random() * window.innerWidth) + 'px';
-    particle.style.top = (window.innerHeight + 20) + 'px';
-    particle.textContent = '❤️';
-    document.body.appendChild(particle);
+    const p = document.createElement('div');
+    p.classList.add('particle');
+    p.style.left = (Math.random() * window.innerWidth) + 'px';
+    p.style.top = (window.innerHeight + 30) + 'px';
+    p.textContent = '❤️';
+    document.body.appendChild(p);
 
-    const duration = 4000 + Math.random() * 2000;
-    particle.style.animationDuration = duration + 'ms';
+    // 动画时间和延迟
+    const duration = 4000 + Math.random() * 3000;
+    p.style.animationDuration = duration + 'ms';
 
-    setTimeout(() => {
-      particle.remove();
-    }, duration);
+    // 随机淡入动画
+    p.style.animationTimingFunction = 'cubic-bezier(0.42, 0, 0.58, 1)';
+
+    setTimeout(() => p.remove(), duration);
   }
 
-  // 每 300ms 生成一个爱心粒子
-  setInterval(createParticle, 300);
+  setInterval(createParticle, 250);
 </script>
 
 </body>
