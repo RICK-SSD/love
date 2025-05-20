@@ -11,11 +11,34 @@
             height: 100%;
             background-color: rgba(0, 0, 0, .2);
         }
+        /* 新增文字样式 */
+        #message {
+            position: fixed;
+            bottom: 40px;
+            width: 100%;
+            text-align: center;
+            font-size: 28px;
+            font-weight: 600;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(90deg, #ff416c, #ff4b2b);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-shadow: 0 0 8px rgba(255, 75, 43, 0.8);
+            user-select: none;
+            pointer-events: none;
+            padding: 0 20px;
+            white-space: pre-wrap;
+            line-height: 1.4;
+        }
     </style>
 </head>
 <body>
 
 <canvas id="heart" width="1920" height="947"></canvas>
+
+<!-- 新增显示文字容器 -->
+<div id="message"></div>
+
 <script>
     window.requestAnimationFrame =
         window.__requestAnimationFrame ||
@@ -162,6 +185,13 @@
     var s = document.readyState;
     if (s === 'complete' || s === 'loaded' || s === 'interactive') init();
     else document.addEventListener('DOMContentLoaded', init, false);
+
+    // ———— 新增文字显示 ————
+    window.addEventListener('DOMContentLoaded', () => {
+        const msg = `君の笑顔が、僕の毎日を明るくしてくれる。そんな君を、ずっと大切にしたい。
+你的笑容照亮了我的每一天。我想一直珍惜这样的你。`;
+        document.getElementById('message').textContent = msg;
+    });
 </script>
 
 </body></html>
